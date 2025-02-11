@@ -114,23 +114,25 @@ export const Calculator = () => {
         return (
           <QuestionCard
             question="Hur stor är din takyta?"
-            description={
-              "Ange den tillgängliga takytan för solpaneler i kvadratmeter. " +
-              "Osäker på ytan? Du kan räkna ut en ungefärlig yta genom att exempelvis ta bostadens yta " +
-              "(ett våningsplan) och dela med två (i det fall du har sadeltak och bara vill ha solpaneler i ett väderstreck)."
-            }
+            description="Ange den tillgängliga takytan för solpaneler i kvadratmeter."
           >
-            <div className="flex items-center space-x-2">
-              <Input
-                type="number"
-                value={data.roofSize || ""}
-                onChange={(e) =>
-                  setData({ ...data, roofSize: Number(e.target.value) })
-                }
-                className="text-lg"
-                placeholder="0"
-              />
-              <span className="text-lg">m²</span>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="number"
+                  value={data.roofSize || ""}
+                  onChange={(e) =>
+                    setData({ ...data, roofSize: Number(e.target.value) })
+                  }
+                  className="text-lg"
+                  placeholder="0"
+                />
+                <span className="text-lg">m²</span>
+              </div>
+              <p className="text-sm text-solar-text/70">
+                Osäker på ytan? Du kan räkna ut en ungefärlig yta genom att exempelvis ta bostadens yta 
+                (ett våningsplan) och dela med två (i det fall du har sadeltak och bara vill ha solpaneler i ett väderstreck).
+              </p>
             </div>
           </QuestionCard>
         );
