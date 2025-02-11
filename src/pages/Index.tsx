@@ -1,3 +1,4 @@
+
 import { Calculator } from "@/components/SolarCalculator/Calculator";
 
 const Index = () => {
@@ -6,11 +7,11 @@ const Index = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-solar-primary mb-4">
-            Solar Panel Calculator
+            Solcellskalkylator
           </h1>
           <p className="text-lg text-solar-text/70 max-w-2xl mx-auto">
-            Discover how much you could save by switching to solar energy. Answer a
-            few simple questions to get your personalized estimate.
+            Upptäck hur mycket du kan spara genom att installera solceller. 
+            Svara på några enkla frågor för att få din personliga uppskattning.
           </p>
         </div>
         <Calculator />

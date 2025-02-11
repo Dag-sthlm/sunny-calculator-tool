@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -8,21 +9,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 
 interface CalculatorData {
-  monthlyBill: number;
   roofSize: number;
+  roofAngle: number;
   roofDirection: string;
-  location: string;
-  shadingLevel: string;
-  electricityRate: number;
+  monthlyBill: number;
+  estimatedProduction: number;
 }
 
 const initialData: CalculatorData = {
-  monthlyBill: 0,
   roofSize: 0,
+  roofAngle: 0,
   roofDirection: "",
-  location: "",
-  shadingLevel: "",
-  electricityRate: 0,
+  monthlyBill: 0,
+  estimatedProduction: 0,
 };
 
 export const Calculator = () => {
@@ -32,7 +31,12 @@ export const Calculator = () => {
 
   const handleNext = () => {
     if (validateCurrentStep()) {
-      setStep((prev) => Math.min(prev + 1, 6));
+      if (step === 3) {
+        // Efter takvinkel och riktning, beräkna uppskattad produktion
+        const estimatedProduction = calculateEstimatedProduction(data);
+        setData(prev => ({ ...prev, estimatedProduction }));
+      }
+      setStep((prev) => Math.min(prev + 1, 5));
     }
   };
 
@@ -40,44 +44,62 @@ export const Calculator = () => {
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
+  const calculateEstimatedProduction = (data: CalculatorData) => {
+    // Förenklad beräkning - kan förfinas senare
+    const baseProduction = data.roofSize * 0.15; // 150W per kvadratmeter
+    const angleMultiplier = Math.cos((90 - data.roofAngle) * Math.PI / 180);
+    
+    let directionMultiplier = 1;
+    switch (data.roofDirection) {
+      case "south":
+        directionMultiplier = 1;
+        break;
+      case "east":
+      case "west":
+        directionMultiplier = 0.8;
+        break;
+      case "north":
+        directionMultiplier = 0.6;
+        break;
+    }
+    
+    return baseProduction * angleMultiplier * directionMultiplier;
+  };
+
   const validateCurrentStep = () => {
     switch (step) {
       case 1:
-        if (!data.monthlyBill) {
+        if (!data.roofSize) {
           toast({
-            title: "Please enter your monthly bill",
+            title: "Ange takets storlek",
+            description: "Detta behövs för att beräkna potentiell produktion",
             variant: "destructive",
           });
           return false;
         }
         break;
       case 2:
-        if (!data.roofSize) {
+        if (!data.roofAngle) {
           toast({
-            title: "Please enter your roof size",
+            title: "Ange takets vinkel",
+            description: "Detta påverkar solpanelernas effektivitet",
             variant: "destructive",
           });
           return false;
         }
         break;
-      // Add validation for other steps
+      case 3:
+        if (!data.roofDirection) {
+          toast({
+            title: "Välj takets riktning",
+            description: "Detta är viktigt för solpanelernas prestanda",
+            variant: "destructive",
+          });
+          return false;
+        }
+        break;
     }
     return true;
-  };
-
-  const calculateResults = () => {
-    // Simple calculation example - replace with actual calculations
-    const installationCost = data.roofSize * 100; // $100 per square foot
-    const annualSavings = data.monthlyBill * 12 * 0.7; // 70% savings
-    const breakEvenYears = installationCost / annualSavings;
-    const co2Reduction = data.monthlyBill * 0.85; // kg CO2 per month
-
-    return {
-      installationCost,
-      annualSavings,
-      breakEvenYears,
-      co2Reduction,
-    };
   };
 
   const renderQuestion = () => {
@@ -85,28 +107,8 @@ export const Calculator = () => {
       case 1:
         return (
           <QuestionCard
-            question="What's your average monthly electricity bill?"
-            description="This helps us estimate your energy consumption."
-          >
-            <div className="flex items-center space-x-2">
-              <span className="text-lg">$</span>
-              <Input
-                type="number"
-                value={data.monthlyBill || ""}
-                onChange={(e) =>
-                  setData({ ...data, monthlyBill: Number(e.target.value) })
-                }
-                className="text-lg"
-                placeholder="0"
-              />
-            </div>
-          </QuestionCard>
-        );
-      case 2:
-        return (
-          <QuestionCard
-            question="What's your roof size?"
-            description="Approximate square footage of your roof."
+            question="Hur stor är din takyta?"
+            description="Ange den tillgängliga takytan för solpaneler i kvadratmeter."
           >
             <div className="flex items-center space-x-2">
               <Input
@@ -118,40 +120,97 @@ export const Calculator = () => {
                 className="text-lg"
                 placeholder="0"
               />
-              <span className="text-lg">sq ft</span>
+              <span className="text-lg">m²</span>
+            </div>
+          </QuestionCard>
+        );
+      case 2:
+        return (
+          <QuestionCard
+            question="Vilken lutning har ditt tak?"
+            description="Ange takets vinkel i grader (0° är platt, 45° är ett normalt lutande tak)"
+          >
+            <div className="flex items-center space-x-2">
+              <Input
+                type="number"
+                value={data.roofAngle || ""}
+                onChange={(e) =>
+                  setData({ ...data, roofAngle: Number(e.target.value) })
+                }
+                className="text-lg"
+                placeholder="0"
+                min="0"
+                max="90"
+              />
+              <span className="text-lg">grader</span>
             </div>
           </QuestionCard>
         );
       case 3:
         return (
           <QuestionCard
-            question="Which direction does your roof face?"
-            description="The direction affects solar panel efficiency."
+            question="I vilken riktning ligger taket?"
+            description="Välj den väderstreck som taket är riktat mot."
           >
             <Select
               value={data.roofDirection}
               onValueChange={(value) => setData({ ...data, roofDirection: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select direction" />
+                <SelectValue placeholder="Välj riktning" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="north">North</SelectItem>
-                <SelectItem value="south">South</SelectItem>
-                <SelectItem value="east">East</SelectItem>
-                <SelectItem value="west">West</SelectItem>
+                <SelectItem value="north">Norr</SelectItem>
+                <SelectItem value="south">Söder</SelectItem>
+                <SelectItem value="east">Öster</SelectItem>
+                <SelectItem value="west">Väster</SelectItem>
               </SelectContent>
             </Select>
           </QuestionCard>
         );
-      // Add more cases for remaining questions
+      case 4:
+        return (
+          <QuestionCard
+            question="Uppskattad produktion"
+            description="Baserat på dina svar kan din anläggning producera:"
+          >
+            <div className="text-center">
+              <p className="text-3xl font-bold text-solar-primary mb-2">
+                {Math.round(data.estimatedProduction)} kW
+              </p>
+              <p className="text-solar-text/70">
+                Detta är en uppskattning baserad på takytans storlek, vinkel och riktning.
+              </p>
+            </div>
+          </QuestionCard>
+        );
+      case 5:
+        return (
+          <QuestionCard
+            question="Vad är din genomsnittliga månadskostnad för el?"
+            description="Detta hjälper oss beräkna din potentiella besparing."
+          >
+            <div className="flex items-center space-x-2">
+              <Input
+                type="number"
+                value={data.monthlyBill || ""}
+                onChange={(e) =>
+                  setData({ ...data, monthlyBill: Number(e.target.value) })
+                }
+                className="text-lg"
+                placeholder="0"
+              />
+              <span className="text-lg">kr/mån</span>
+            </div>
+          </QuestionCard>
+        );
     }
   };
 
   return (
     <div className="min-h-screen bg-solar-background p-6">
       <div className="max-w-4xl mx-auto">
-        <ProgressIndicator currentStep={step} totalSteps={6} />
+        <ProgressIndicator currentStep={step} totalSteps={5} />
         <AnimatePresence mode="wait">{renderQuestion()}</AnimatePresence>
         <div className="flex justify-between mt-8">
           <Button
@@ -160,10 +219,10 @@ export const Calculator = () => {
             disabled={step === 1}
             className="px-6"
           >
-            Previous
+            Föregående
           </Button>
           <Button onClick={handleNext} className="px-6 bg-solar-primary">
-            {step === 6 ? "Calculate" : "Next"}
+            {step === 5 ? "Beräkna" : "Nästa"}
           </Button>
         </div>
       </div>
