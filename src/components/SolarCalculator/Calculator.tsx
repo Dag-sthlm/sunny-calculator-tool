@@ -52,20 +52,20 @@ export const Calculator = () => {
     const optimalAngle = 42;
     const angleEfficiency = Math.cos((Math.abs(data.roofAngle - optimalAngle) * Math.PI) / 180);
     
-    // Riktningsfaktorer baserade på faktisk dataförlust
+    // Riktningsfaktorer baserade på data från Energimyndigheten
     let directionMultiplier = 1;
     switch (data.roofDirection) {
       case "south":
         directionMultiplier = 1; // 100% för söderläge
         break;
       case "east":
-        directionMultiplier = 0.85; // 85% för österläge
+        directionMultiplier = 0.8; // 80% för österläge
         break;
       case "west":
-        directionMultiplier = 0.85; // 85% för västerläge
+        directionMultiplier = 0.8; // 80% för västerläge
         break;
       case "north":
-        directionMultiplier = 0.7; // 70% för norrläge
+        directionMultiplier = 0.45; // 45% för norrläge
         break;
     }
     
@@ -167,10 +167,10 @@ export const Calculator = () => {
                 <SelectValue placeholder="Välj riktning" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="north">Norr (70% effekt)</SelectItem>
+                <SelectItem value="north">Norr (45% effekt)</SelectItem>
                 <SelectItem value="south">Söder (100% effekt)</SelectItem>
-                <SelectItem value="east">Öster (85% effekt)</SelectItem>
-                <SelectItem value="west">Väster (85% effekt)</SelectItem>
+                <SelectItem value="east">Öster (80% effekt)</SelectItem>
+                <SelectItem value="west">Väster (80% effekt)</SelectItem>
               </SelectContent>
             </Select>
           </QuestionCard>
