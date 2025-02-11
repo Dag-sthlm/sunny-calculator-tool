@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -115,7 +114,11 @@ export const Calculator = () => {
         return (
           <QuestionCard
             question="Hur stor är din takyta?"
-            description="Ange den tillgängliga takytan för solpaneler i kvadratmeter."
+            description={
+              "Ange den tillgängliga takytan för solpaneler i kvadratmeter. " +
+              "Osäker på ytan? Du kan räkna ut en ungefärlig yta genom att exempelvis ta bostadens yta " +
+              "(ett våningsplan) och dela med två (i det fall du har sadeltak och bara vill ha solpaneler i ett väderstreck)."
+            }
           >
             <div className="flex items-center space-x-2">
               <Input
