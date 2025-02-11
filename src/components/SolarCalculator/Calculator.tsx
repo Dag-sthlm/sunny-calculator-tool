@@ -32,7 +32,6 @@ export const Calculator = () => {
   const handleNext = () => {
     if (validateCurrentStep()) {
       if (step === 3) {
-        // Efter takvinkel och riktning, beräkna uppskattad produktion
         const estimatedProduction = calculateEstimatedProduction(data);
         setData(prev => ({ ...prev, estimatedProduction }));
       }
@@ -45,25 +44,33 @@ export const Calculator = () => {
   };
 
   const calculateEstimatedProduction = (data: CalculatorData) => {
-    // Förenklad beräkning - kan förfinas senare
-    const baseProduction = data.roofSize * 0.15; // 150W per kvadratmeter
-    const angleMultiplier = Math.cos((90 - data.roofAngle) * Math.PI / 180);
+    // Moderna solpaneler producerar cirka 230W per kvadratmeter
+    const baseProduction = data.roofSize * 0.23;
     
+    // Optimal vinkel i Sverige är cirka 42 grader
+    // Vi använder en sinusfunktion för att beräkna effektiviteten baserat på avvikelsen från optimal vinkel
+    const optimalAngle = 42;
+    const angleEfficiency = Math.cos((Math.abs(data.roofAngle - optimalAngle) * Math.PI) / 180);
+    
+    // Riktningsfaktorer baserade på faktisk dataförlust
     let directionMultiplier = 1;
     switch (data.roofDirection) {
       case "south":
-        directionMultiplier = 1;
+        directionMultiplier = 1; // 100% för söderläge
         break;
       case "east":
+        directionMultiplier = 0.85; // 85% för österläge
+        break;
       case "west":
-        directionMultiplier = 0.8;
+        directionMultiplier = 0.85; // 85% för västerläge
         break;
       case "north":
-        directionMultiplier = 0.6;
+        directionMultiplier = 0.7; // 70% för norrläge
         break;
     }
     
-    return baseProduction * angleMultiplier * directionMultiplier;
+    const totalProduction = baseProduction * angleEfficiency * directionMultiplier;
+    return totalProduction;
   };
 
   const validateCurrentStep = () => {
@@ -128,7 +135,7 @@ export const Calculator = () => {
         return (
           <QuestionCard
             question="Vilken lutning har ditt tak?"
-            description="Ange takets vinkel i grader (0° är platt, 45° är ett normalt lutande tak)"
+            description="Ange takets vinkel i grader. Optimal vinkel i Sverige är cirka 42 grader."
           >
             <div className="flex items-center space-x-2">
               <Input
@@ -150,7 +157,7 @@ export const Calculator = () => {
         return (
           <QuestionCard
             question="I vilken riktning ligger taket?"
-            description="Välj den väderstreck som taket är riktat mot."
+            description="Välj den väderstreck som taket är riktat mot. Söderläge ger bäst effekt."
           >
             <Select
               value={data.roofDirection}
@@ -160,10 +167,10 @@ export const Calculator = () => {
                 <SelectValue placeholder="Välj riktning" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="north">Norr</SelectItem>
-                <SelectItem value="south">Söder</SelectItem>
-                <SelectItem value="east">Öster</SelectItem>
-                <SelectItem value="west">Väster</SelectItem>
+                <SelectItem value="north">Norr (70% effekt)</SelectItem>
+                <SelectItem value="south">Söder (100% effekt)</SelectItem>
+                <SelectItem value="east">Öster (85% effekt)</SelectItem>
+                <SelectItem value="west">Väster (85% effekt)</SelectItem>
               </SelectContent>
             </Select>
           </QuestionCard>
@@ -174,13 +181,20 @@ export const Calculator = () => {
             question="Uppskattad produktion"
             description="Baserat på dina svar kan din anläggning producera:"
           >
-            <div className="text-center">
+            <div className="text-center space-y-4">
               <p className="text-3xl font-bold text-solar-primary mb-2">
                 {Math.round(data.estimatedProduction)} kW
               </p>
-              <p className="text-solar-text/70">
-                Detta är en uppskattning baserad på takytans storlek, vinkel och riktning.
-              </p>
+              <div className="text-solar-text/70 space-y-2 text-left">
+                <p>Beräkningen baseras på:</p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Modern solpanelsteknik (230W/m²)</li>
+                  <li>Din takvinkel ({data.roofAngle}°) jämfört med optimal vinkel (42°)</li>
+                  <li>Takets riktning ({data.roofDirection === "south" ? "söder" : 
+                                      data.roofDirection === "north" ? "norr" : 
+                                      data.roofDirection === "east" ? "öster" : "väster"})</li>
+                </ul>
+              </div>
             </div>
           </QuestionCard>
         );
