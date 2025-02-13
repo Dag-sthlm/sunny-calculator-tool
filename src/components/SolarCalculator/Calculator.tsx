@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -27,6 +26,7 @@ const initialData: CalculatorData = {
 export const Calculator = () => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<CalculatorData>(initialData);
+  const [showResults, setShowResults] = useState(false);
   const { toast } = useToast();
 
   const handleNext = () => {
@@ -35,7 +35,11 @@ export const Calculator = () => {
         const estimatedProduction = calculateEstimatedProduction(data);
         setData(prev => ({ ...prev, estimatedProduction }));
       }
-      setStep((prev) => Math.min(prev + 1, 6));
+      if (step === 6 && data.monthlyBill) {
+        setShowResults(true);
+      } else {
+        setStep((prev) => Math.min(prev + 1, 6));
+      }
     }
   };
 
@@ -66,6 +70,20 @@ export const Calculator = () => {
     
     const totalProduction = baseProduction * angleEfficiency * directionMultiplier;
     return totalProduction;
+  };
+
+  const calculateSavings = () => {
+    const yearlyProduction = data.estimatedProduction * 1000; // Konvertera från kW till kWh
+    const estimatedPricePerKwh = 2; // Genomsnittligt elpris inkl. nätavgifter
+    const yearlySavings = yearlyProduction * estimatedPricePerKwh;
+    const installationCost = Math.round(data.estimatedProduction * 15000);
+    const paybackYears = installationCost / yearlySavings;
+    
+    return {
+      yearlySavings,
+      paybackYears,
+      installationCost
+    };
   };
 
   const validateCurrentStep = () => {
@@ -100,11 +118,60 @@ export const Calculator = () => {
           return false;
         }
         break;
+      case 6:
+        if (!data.monthlyBill) {
+          toast({
+            title: "Ange månadskostnad",
+            description: "Detta behövs för att beräkna besparingen",
+            variant: "destructive",
+          });
+          return false;
+        }
+        break;
     }
     return true;
   };
 
   const renderQuestion = () => {
+    if (showResults) {
+      const { yearlySavings, paybackYears, installationCost } = calculateSavings();
+      return (
+        <QuestionCard
+          question="Din potentiella besparing"
+          description="Baserat på din information har vi beräknat följande:"
+        >
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="text-center">
+                <p className="text-lg text-solar-text/70 mb-1">Årlig besparing</p>
+                <p className="text-3xl font-bold text-solar-primary">
+                  {Math.round(yearlySavings).toLocaleString()} kr/år
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg text-solar-text/70 mb-1">Återbetalningstid</p>
+                <p className="text-3xl font-bold text-solar-primary">
+                  {Math.round(paybackYears * 10) / 10} år
+                </p>
+              </div>
+            </div>
+            <div className="text-solar-text/70 space-y-2 text-sm">
+              <p>Beräkningen baseras på:</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Din uppskattade årsproduktion: {Math.round(data.estimatedProduction * 1000)} kWh</li>
+                <li>Genomsnittligt elpris: 2 kr/kWh</li>
+                <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
+              </ul>
+              <p className="mt-4">
+                Observera att detta är en förenklad beräkning. Faktiska besparingar kan variera beroende 
+                på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el.
+              </p>
+            </div>
+          </div>
+        </QuestionCard>
+      );
+    }
+
     switch (step) {
       case 1:
         return (
@@ -249,20 +316,24 @@ export const Calculator = () => {
   return (
     <div className="min-h-screen bg-solar-background p-6">
       <div className="max-w-4xl mx-auto">
-        <ProgressIndicator currentStep={step} totalSteps={6} />
+        <ProgressIndicator currentStep={showResults ? 6 : step} totalSteps={6} />
         <AnimatePresence mode="wait">{renderQuestion()}</AnimatePresence>
         <div className="flex justify-between mt-8">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={step === 1}
-            className="px-6"
-          >
-            Föregående
-          </Button>
-          <Button onClick={handleNext} className="px-6 bg-solar-primary">
-            {step === 6 ? "Beräkna" : "Nästa"}
-          </Button>
+          {!showResults && (
+            <>
+              <Button
+                variant="outline"
+                onClick={handlePrevious}
+                disabled={step === 1}
+                className="px-6"
+              >
+                Föregående
+              </Button>
+              <Button onClick={handleNext} className="px-6 bg-solar-primary">
+                {step === 6 ? "Beräkna" : "Nästa"}
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>
