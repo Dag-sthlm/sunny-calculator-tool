@@ -154,6 +154,22 @@ export const Calculator = () => {
                 Observera att detta är en förenklad beräkning. Faktiska besparingar kan variera beroende 
                 på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el.
               </p>
+              <div className="mt-8 text-center">
+                <p className="text-base mb-4">
+                  Vill du ha kostnadsfria offerter från upp till tre solcellsinstallatörer nära dig?
+                </p>
+                <Button 
+                  className="bg-solar-primary hover:bg-solar-primary/90 text-white px-8 py-3 text-base"
+                  onClick={() => {
+                    const element = document.querySelector('.leazard--scroll');
+                    if (element) {
+                      element.click();
+                    }
+                  }}
+                >
+                  Få erbjudanden nu
+                </Button>
+              </div>
             </div>
           </div>
         </QuestionCard>
