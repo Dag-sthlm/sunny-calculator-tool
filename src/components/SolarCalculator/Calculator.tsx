@@ -43,28 +43,23 @@ export const Calculator = () => {
   };
 
   const calculateEstimatedProduction = (data: CalculatorData) => {
-    // Moderna solpaneler producerar cirka 230W per kvadratmeter
     const baseProduction = data.roofSize * 0.23;
-    
-    // Optimal vinkel i Sverige är cirka 42 grader
-    // Vi använder en sinusfunktion för att beräkna effektiviteten baserat på avvikelsen från optimal vinkel
     const optimalAngle = 42;
     const angleEfficiency = Math.cos((Math.abs(data.roofAngle - optimalAngle) * Math.PI) / 180);
     
-    // Riktningsfaktorer baserade på data från Energimyndigheten
     let directionMultiplier = 1;
     switch (data.roofDirection) {
       case "south":
-        directionMultiplier = 1; // 100% för söderläge
+        directionMultiplier = 1;
         break;
       case "east":
-        directionMultiplier = 0.8; // 80% för österläge
+        directionMultiplier = 0.8;
         break;
       case "west":
-        directionMultiplier = 0.8; // 80% för västerläge
+        directionMultiplier = 0.8;
         break;
       case "north":
-        directionMultiplier = 0.45; // 45% för norrläge
+        directionMultiplier = 0.45;
         break;
     }
     
@@ -146,10 +141,9 @@ export const Calculator = () => {
             <Select
               value={data.roofAngle.toString()}
               onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
-              defaultValue="Välj taklutning"
             >
               <SelectTrigger>
-                <SelectValue defaultValue="Välj taklutning">Välj taklutning</SelectValue>
+                <SelectValue placeholder="Välj taklutning" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="15">Platt eller flackt tak</SelectItem>
