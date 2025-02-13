@@ -74,7 +74,28 @@ export const Calculator = () => {
 
   const calculateSavings = () => {
     const yearlyProduction = data.estimatedProduction * 1000; // Konvertera från kW till kWh
+    
+    // Månadsvis fördelning av årsproduktion i Sverige (procent)
+    const monthlyDistribution = [
+      1,    // Januari
+      3,    // Februari
+      8,    // Mars
+      12,   // April
+      15,   // Maj
+      16,   // Juni
+      16,   // Juli
+      14,   // Augusti
+      9,    // September
+      4,    // Oktober
+      1.5,  // November
+      0.5   // December
+    ];
+    
     const estimatedPricePerKwh = 2; // Genomsnittligt elpris inkl. nätavgifter
+    const monthlyProduction = monthlyDistribution.map(percentage => 
+      (yearlyProduction * (percentage / 100))
+    );
+    
     const yearlySavings = yearlyProduction * estimatedPricePerKwh;
     const installationCost = Math.round(data.estimatedProduction * 15000);
     const paybackYears = installationCost / yearlySavings;
@@ -82,7 +103,8 @@ export const Calculator = () => {
     return {
       yearlySavings,
       paybackYears,
-      installationCost
+      installationCost,
+      monthlyProduction
     };
   };
 
@@ -134,7 +156,7 @@ export const Calculator = () => {
 
   const renderQuestion = () => {
     if (showResults) {
-      const { yearlySavings, paybackYears, installationCost } = calculateSavings();
+      const { yearlySavings, paybackYears, installationCost, monthlyProduction } = calculateSavings();
       return (
         <QuestionCard
           question="Din potentiella besparing"
@@ -162,9 +184,21 @@ export const Calculator = () => {
                 <li>Genomsnittligt elpris: 2 kr/kWh</li>
                 <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
               </ul>
+              <div className="mt-4">
+                <p className="mb-2">Uppskattad månadsproduktion (kWh):</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {monthlyProduction.map((prod, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span>{['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'][index]}:</span>
+                      <span>{Math.round(prod)} kWh</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <p className="mt-4">
                 Observera att detta är en förenklad beräkning. Faktiska besparingar kan variera beroende 
-                på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el.
+                på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el. 
+                Produktionen är särskilt låg under vintermånaderna november till februari.
               </p>
             </div>
           </div>
