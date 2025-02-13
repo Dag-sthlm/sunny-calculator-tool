@@ -190,7 +190,7 @@ export const Calculator = () => {
                 <p>Beräkningen baseras på:</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Modern solpanelsteknik (230W/m²)</li>
-                  <li>Din takvinkel ({data.roofAngle}°) jämfört med optimal vinkel (42°)</li>
+                  <li>Din takvinkel ({data.roofAngle}°)</li>
                   <li>Takets riktning ({data.roofDirection === "south" ? "söder" : 
                                       data.roofDirection === "north" ? "norr" : 
                                       data.roofDirection === "east" ? "öster" : "väster"})</li>
