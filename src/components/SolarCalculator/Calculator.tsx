@@ -146,9 +146,10 @@ export const Calculator = () => {
             <Select
               value={data.roofAngle.toString()}
               onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
+              defaultValue="Välj taklutning"
             >
               <SelectTrigger>
-                <SelectValue placeholder="Välj taklutning" />
+                <SelectValue defaultValue="Välj taklutning">Välj taklutning</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="15">Platt eller flackt tak</SelectItem>
