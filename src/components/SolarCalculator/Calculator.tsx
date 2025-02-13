@@ -158,7 +158,7 @@ export const Calculator = () => {
         return (
           <QuestionCard
             question="I vilken riktning ligger taket?"
-            description="Välj den väderstreck som taket är riktat mot. Söderläge ger bäst effekt."
+            description="Välj det väderstreck som taket huvudsakligen är ritat emot."
           >
             <Select
               value={data.roofDirection}
@@ -168,10 +168,10 @@ export const Calculator = () => {
                 <SelectValue placeholder="Välj riktning" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="north">Norr (45% effekt)</SelectItem>
-                <SelectItem value="south">Söder (100% effekt)</SelectItem>
-                <SelectItem value="east">Öster (80% effekt)</SelectItem>
-                <SelectItem value="west">Väster (80% effekt)</SelectItem>
+                <SelectItem value="north">Norr</SelectItem>
+                <SelectItem value="south">Söder</SelectItem>
+                <SelectItem value="east">Öster</SelectItem>
+                <SelectItem value="west">Väster</SelectItem>
               </SelectContent>
             </Select>
           </QuestionCard>
