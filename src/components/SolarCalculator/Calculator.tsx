@@ -161,7 +161,7 @@ export const Calculator = () => {
                 <Button 
                   className="bg-solar-primary hover:bg-solar-primary/90 text-white px-8 py-3 text-base"
                   onClick={() => {
-                    const element = document.querySelector('.leazard--scroll');
+                    const element = document.querySelector('.leazard--scroll') as HTMLElement;
                     if (element) {
                       element.click();
                     }
