@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -34,7 +35,7 @@ export const Calculator = () => {
         const estimatedProduction = calculateEstimatedProduction(data);
         setData(prev => ({ ...prev, estimatedProduction }));
       }
-      setStep((prev) => Math.min(prev + 1, 5));
+      setStep((prev) => Math.min(prev + 1, 6));
     }
   };
 
@@ -176,6 +177,7 @@ export const Calculator = () => {
             </Select>
           </QuestionCard>
         );
+
       case 4:
         return (
           <QuestionCard
@@ -199,7 +201,29 @@ export const Calculator = () => {
             </div>
           </QuestionCard>
         );
+
       case 5:
+        return (
+          <QuestionCard
+            question="Uppskattad installationskostnad"
+            description="Baserat på dina svar kan en solcellsinstallation kosta cirka:"
+          >
+            <div className="text-center space-y-4">
+              <p className="text-3xl font-bold text-solar-primary mb-2">
+                {Math.round(data.estimatedProduction * 15000).toLocaleString()} kr
+              </p>
+              <div className="text-solar-text/70 space-y-2 text-left">
+                <p className="text-sm">
+                  Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
+                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara missvisande. 
+                  Ta alltid in flera offerter och jämför verkliga priser.
+                </p>
+              </div>
+            </div>
+          </QuestionCard>
+        );
+
+      case 6:
         return (
           <QuestionCard
             question="Vad är din genomsnittliga månadskostnad för el?"
@@ -225,7 +249,7 @@ export const Calculator = () => {
   return (
     <div className="min-h-screen bg-solar-background p-6">
       <div className="max-w-4xl mx-auto">
-        <ProgressIndicator currentStep={step} totalSteps={5} />
+        <ProgressIndicator currentStep={step} totalSteps={6} />
         <AnimatePresence mode="wait">{renderQuestion()}</AnimatePresence>
         <div className="flex justify-between mt-8">
           <Button
@@ -237,7 +261,7 @@ export const Calculator = () => {
             Föregående
           </Button>
           <Button onClick={handleNext} className="px-6 bg-solar-primary">
-            {step === 5 ? "Beräkna" : "Nästa"}
+            {step === 6 ? "Beräkna" : "Nästa"}
           </Button>
         </div>
       </div>
