@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 
 interface ProgressIndicatorProps {
@@ -13,10 +14,10 @@ export const ProgressIndicator = ({
     <div className="w-full mb-8">
       <div className="flex justify-between mb-2">
         <span className="text-sm text-solar-text/70">
-          Step {currentStep} of {totalSteps}
+          Steg {currentStep} av {totalSteps}
         </span>
         <span className="text-sm text-solar-text/70">
-          {Math.round((currentStep / totalSteps) * 100)}% Complete
+          {Math.round((currentStep / totalSteps) * 100)}% färdigt
         </span>
       </div>
       <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">

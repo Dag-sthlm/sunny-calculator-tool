@@ -11,7 +11,6 @@ interface CalculatorData {
   roofSize: number;
   roofAngle: number;
   roofDirection: string;
-  monthlyBill: number;
   estimatedProduction: number;
 }
 
@@ -19,7 +18,6 @@ const initialData: CalculatorData = {
   roofSize: 0,
   roofAngle: 0,
   roofDirection: "",
-  monthlyBill: 0,
   estimatedProduction: 0,
 };
 
@@ -35,10 +33,10 @@ export const Calculator = () => {
         const estimatedProduction = calculateEstimatedProduction(data);
         setData(prev => ({ ...prev, estimatedProduction }));
       }
-      if (step === 6 && data.monthlyBill) {
+      if (step === 5) {
         setShowResults(true);
       } else {
-        setStep((prev) => Math.min(prev + 1, 6));
+        setStep((prev) => Math.min(prev + 1, 5));
       }
     }
   };
@@ -73,29 +71,8 @@ export const Calculator = () => {
   };
 
   const calculateSavings = () => {
-    const yearlyProduction = data.estimatedProduction * 1000; // Konvertera från kW till kWh
-    
-    // Månadsvis fördelning av årsproduktion i Sverige (procent)
-    const monthlyDistribution = [
-      1,    // Januari
-      3,    // Februari
-      8,    // Mars
-      12,   // April
-      15,   // Maj
-      16,   // Juni
-      16,   // Juli
-      14,   // Augusti
-      9,    // September
-      4,    // Oktober
-      1.5,  // November
-      0.5   // December
-    ];
-    
-    const estimatedPricePerKwh = 2; // Genomsnittligt elpris inkl. nätavgifter
-    const monthlyProduction = monthlyDistribution.map(percentage => 
-      (yearlyProduction * (percentage / 100))
-    );
-    
+    const yearlyProduction = data.estimatedProduction * 1000;
+    const estimatedPricePerKwh = 2;
     const yearlySavings = yearlyProduction * estimatedPricePerKwh;
     const installationCost = Math.round(data.estimatedProduction * 15000);
     const paybackYears = installationCost / yearlySavings;
@@ -103,8 +80,7 @@ export const Calculator = () => {
     return {
       yearlySavings,
       paybackYears,
-      installationCost,
-      monthlyProduction
+      installationCost
     };
   };
 
@@ -140,23 +116,13 @@ export const Calculator = () => {
           return false;
         }
         break;
-      case 6:
-        if (!data.monthlyBill) {
-          toast({
-            title: "Ange månadskostnad",
-            description: "Detta behövs för att beräkna besparingen",
-            variant: "destructive",
-          });
-          return false;
-        }
-        break;
     }
     return true;
   };
 
   const renderQuestion = () => {
     if (showResults) {
-      const { yearlySavings, paybackYears, installationCost, monthlyProduction } = calculateSavings();
+      const { yearlySavings, paybackYears, installationCost } = calculateSavings();
       return (
         <QuestionCard
           question="Din potentiella besparing"
@@ -184,21 +150,9 @@ export const Calculator = () => {
                 <li>Genomsnittligt elpris: 2 kr/kWh</li>
                 <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
               </ul>
-              <div className="mt-4">
-                <p className="mb-2">Uppskattad månadsproduktion (kWh):</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {monthlyProduction.map((prod, index) => (
-                    <div key={index} className="flex justify-between">
-                      <span>{['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'][index]}:</span>
-                      <span>{Math.round(prod)} kWh</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
               <p className="mt-4">
                 Observera att detta är en förenklad beräkning. Faktiska besparingar kan variera beroende 
-                på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el. 
-                Produktionen är särskilt låg under vintermånaderna november till februari.
+                på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el.
               </p>
             </div>
           </div>
@@ -227,8 +181,8 @@ export const Calculator = () => {
                 <span className="text-lg">m²</span>
               </div>
               <p className="text-sm text-solar-text/70">
-                Osäker på ytan? Du kan räkna ut en ungefärlig yta genom att exempelvis ta bostadens yta 
-                (ett våningsplan) och dela med två (i det fall du har sadeltak och bara vill ha solpaneler i ett väderstreck).
+                Osäker på ytan? Du kan ange en ungefärlig uppskattning. Ta exempelvis husets yta och dela med två 
+                om du har sadeltak och vill ha solpaneler i ett väderstreck.
               </p>
             </div>
           </QuestionCard>
@@ -297,6 +251,7 @@ export const Calculator = () => {
                   <li>Takets riktning ({data.roofDirection === "south" ? "söder" : 
                                       data.roofDirection === "north" ? "norr" : 
                                       data.roofDirection === "east" ? "öster" : "väster"})</li>
+                  <li>Ungefärligt antal kvadratmeter solceller ({data.roofSize} m²)</li>
                 </ul>
               </div>
             </div>
@@ -316,31 +271,10 @@ export const Calculator = () => {
               <div className="text-solar-text/70 space-y-2 text-left">
                 <p className="text-sm">
                   Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
-                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara missvisande. 
+                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara helt missvisande. 
                   Ta alltid in flera offerter och jämför verkliga priser.
                 </p>
               </div>
-            </div>
-          </QuestionCard>
-        );
-
-      case 6:
-        return (
-          <QuestionCard
-            question="Vad är din genomsnittliga månadskostnad för el?"
-            description="Detta hjälper oss beräkna din potentiella besparing."
-          >
-            <div className="flex items-center space-x-2">
-              <Input
-                type="number"
-                value={data.monthlyBill || ""}
-                onChange={(e) =>
-                  setData({ ...data, monthlyBill: Number(e.target.value) })
-                }
-                className="text-lg"
-                placeholder="0"
-              />
-              <span className="text-lg">kr/mån</span>
             </div>
           </QuestionCard>
         );
@@ -350,7 +284,7 @@ export const Calculator = () => {
   return (
     <div className="min-h-screen bg-solar-background p-6">
       <div className="max-w-4xl mx-auto">
-        <ProgressIndicator currentStep={showResults ? 6 : step} totalSteps={6} />
+        <ProgressIndicator currentStep={showResults ? 5 : step} totalSteps={5} />
         <AnimatePresence mode="wait">{renderQuestion()}</AnimatePresence>
         <div className="flex justify-between mt-8">
           {!showResults && (
@@ -364,7 +298,7 @@ export const Calculator = () => {
                 Föregående
               </Button>
               <Button onClick={handleNext} className="px-6 bg-solar-primary">
-                {step === 6 ? "Beräkna" : "Nästa"}
+                {step === 5 ? "Beräkna" : "Nästa"}
               </Button>
             </>
           )}

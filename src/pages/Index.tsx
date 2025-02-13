@@ -10,7 +10,7 @@ const Index = () => {
             Solcellskalkylator
           </h1>
           <p className="text-lg text-solar-text/70 max-w-2xl mx-auto">
-            Upptäck hur mycket du kan spara genom att installera solceller. 
+            Upptäck hur mycket du kan spara genom att installera solceller på ditt tak. 
             Svara på några enkla frågor för att få din personliga uppskattning.
           </p>
         </div>
