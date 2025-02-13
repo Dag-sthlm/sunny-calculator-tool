@@ -136,28 +136,35 @@ export const Calculator = () => {
             </div>
           </QuestionCard>
         );
+
       case 2:
         return (
           <QuestionCard
             question="Vilken lutning har ditt tak?"
-            description="Ange takets vinkel i grader. Optimal vinkel i Sverige är cirka 42 grader."
+            description="Välj det alternativ som bäst beskriver ditt tak."
           >
-            <div className="flex items-center space-x-2">
-              <Input
-                type="number"
-                value={data.roofAngle || ""}
-                onChange={(e) =>
-                  setData({ ...data, roofAngle: Number(e.target.value) })
-                }
-                className="text-lg"
-                placeholder="0"
-                min="0"
-                max="90"
-              />
-              <span className="text-lg">grader</span>
+            <div className="space-y-4">
+              <Select
+                value={data.roofAngle.toString()}
+                onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Välj taklutning" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Platt tak</SelectItem>
+                  <SelectItem value="15">Flackt tak</SelectItem>
+                  <SelectItem value="27">Normalt tak</SelectItem>
+                  <SelectItem value="40">Brant tak</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-solar-text/70">
+                Vid platta eller mycket flacka tak kan installatören föreslå att panelerna vinklas upp
+              </p>
             </div>
           </QuestionCard>
         );
+
       case 3:
         return (
           <QuestionCard
