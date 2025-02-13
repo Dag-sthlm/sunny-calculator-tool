@@ -143,25 +143,19 @@ export const Calculator = () => {
             question="Vilken lutning har ditt tak?"
             description="Välj det alternativ som bäst beskriver ditt tak."
           >
-            <div className="space-y-4">
-              <Select
-                value={data.roofAngle.toString()}
-                onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Välj taklutning" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">Platt tak</SelectItem>
-                  <SelectItem value="15">Flackt tak</SelectItem>
-                  <SelectItem value="27">Normalt tak</SelectItem>
-                  <SelectItem value="40">Brant tak</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-solar-text/70">
-                Vid platta eller mycket flacka tak kan installatören föreslå att panelerna vinklas upp
-              </p>
-            </div>
+            <Select
+              value={data.roofAngle.toString()}
+              onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Välj taklutning" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">Platt eller flackt tak</SelectItem>
+                <SelectItem value="27">Normalt tak</SelectItem>
+                <SelectItem value="40">Brant tak</SelectItem>
+              </SelectContent>
+            </Select>
           </QuestionCard>
         );
 
