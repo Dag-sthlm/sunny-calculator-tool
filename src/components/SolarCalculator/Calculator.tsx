@@ -27,6 +27,12 @@ export const Calculator = () => {
   const [showResults, setShowResults] = useState(false);
   const { toast } = useToast();
 
+  const handleReset = () => {
+    setStep(1);
+    setData(initialData);
+    setShowResults(false);
+  };
+
   const handleNext = () => {
     if (validateCurrentStep()) {
       if (step === 3) {
@@ -300,7 +306,11 @@ export const Calculator = () => {
   return (
     <div className="min-h-screen bg-solar-background p-6">
       <div className="max-w-4xl mx-auto">
-        <ProgressIndicator currentStep={showResults ? 5 : step} totalSteps={5} />
+        <ProgressIndicator 
+          currentStep={showResults ? 5 : step} 
+          totalSteps={5} 
+          onReset={handleReset}
+        />
         <AnimatePresence mode="wait">{renderQuestion()}</AnimatePresence>
         <div className="flex justify-between mt-8">
           {!showResults && (
