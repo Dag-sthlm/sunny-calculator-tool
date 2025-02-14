@@ -178,8 +178,7 @@ export const Calculator = () => {
                 </Button>
               </div>
             </div>
-          </div>
-        </QuestionCard>
+          </QuestionCard>
       );
     }
 
@@ -221,8 +220,11 @@ export const Calculator = () => {
               value={data.roofAngle.toString()}
               onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
             >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Välj typ av tak" />
+              <SelectTrigger className="w-full min-w-[200px] h-10">
+                <SelectValue 
+                  className="block w-full" 
+                  placeholder="Välj typ av tak"
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="15">Platt eller flackt tak</SelectItem>
