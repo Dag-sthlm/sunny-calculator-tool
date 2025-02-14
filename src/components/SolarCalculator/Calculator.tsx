@@ -99,7 +99,8 @@ export const Calculator = () => {
     const yearlyProduction = data.estimatedProduction * 1000;
     const estimatedPricePerKwh = 2;
     const yearlySavings = yearlyProduction * estimatedPricePerKwh;
-    const installationCost = Math.round(data.actualSolarPanelArea * 2500);
+    const baseCost = 30000;
+    const installationCost = Math.round(data.actualSolarPanelArea * 2500) + baseCost;
     const paybackYears = installationCost / yearlySavings;
     
     return {
@@ -318,12 +319,13 @@ export const Calculator = () => {
           >
             <div className="text-center space-y-4">
               <p className="text-3xl font-bold text-[#26292a] mb-2">
-                {Math.round(data.actualSolarPanelArea * 2500).toLocaleString()} kr
+                {(Math.round(data.actualSolarPanelArea * 2500) + 30000).toLocaleString()} kr
               </p>
               <div className="text-[#26292a]/70 space-y-2 text-left">
                 <p className="text-sm">
                   Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
-                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara missvisande. 
+                  I priset ingår en grundkostnad på 30 000 kr samt materialkostnad baserat på anläggningens storlek.
+                  Beroende på ett flertal faktorer kan siffrorna vara missvisande. 
                   Ta alltid in flera offerter och jämför verkliga priser.
                 </p>
               </div>
