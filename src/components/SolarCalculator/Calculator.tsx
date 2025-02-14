@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -323,8 +322,7 @@ export const Calculator = () => {
               </p>
               <div className="text-[#26292a]/70 space-y-2 text-left">
                 <p className="text-sm">
-                  Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
-                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara missvisande. 
+                  Beroende på ett flertal faktorer kan siffrorna vara missvisande. 
                   Ta alltid in flera offerter och jämför verkliga priser.
                 </p>
               </div>
