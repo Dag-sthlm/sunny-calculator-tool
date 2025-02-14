@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -317,18 +316,10 @@ export const Calculator = () => {
             question="Uppskattad installationskostnad"
             description="Baserat på dina svar kan en solcellsinstallation kosta cirka:"
           >
-            <div className="text-center space-y-4">
-              <p className="text-3xl font-bold text-[#26292a] mb-2">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#26292a]">
                 {(Math.round(data.actualSolarPanelArea * 2500) + 30000).toLocaleString()} kr
               </p>
-              <div className="text-[#26292a]/70 space-y-2 text-left">
-                <p className="text-sm">
-                  Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
-                  I priset ingår en grundkostnad på 30 000 kr samt materialkostnad baserat på anläggningens storlek.
-                  Beroende på ett flertal faktorer kan siffrorna vara missvisande. 
-                  Ta alltid in flera offerter och jämför verkliga priser.
-                </p>
-              </div>
             </div>
           </QuestionCard>
         );
