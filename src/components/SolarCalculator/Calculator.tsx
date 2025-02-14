@@ -319,11 +319,14 @@ export const Calculator = () => {
                 variant="outline"
                 onClick={handlePrevious}
                 disabled={step === 1}
-                className="px-6 text-[#26292a]"
+                className="px-6 text-[#443dc1] border-[#443dc1] hover:bg-[#443dc1]/10"
               >
                 Föregående
               </Button>
-              <Button onClick={handleNext} className="px-6 bg-solar-primary text-white">
+              <Button 
+                onClick={handleNext} 
+                className="px-6 bg-[#443dc1] hover:bg-[#443dc1]/90 text-white"
+              >
                 {step === 5 ? "Beräkna besparing" : "Nästa"}
               </Button>
             </>
