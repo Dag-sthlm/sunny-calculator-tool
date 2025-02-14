@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -178,7 +179,8 @@ export const Calculator = () => {
                 </Button>
               </div>
             </div>
-          </QuestionCard>
+          </div>
+        </QuestionCard>
       );
     }
 
@@ -331,7 +333,7 @@ export const Calculator = () => {
                 onClick={handleNext} 
                 className={cn(
                   "px-6 bg-[#443dc1] hover:bg-[#443dc1]/90 text-white",
-                  step === 1 ? "ml-auto" : "" // Om det är steg 1, placera knappen till höger
+                  step === 1 ? "ml-auto" : ""
                 )}
               >
                 {step === 5 ? "Beräkna besparing" : "Nästa"}
