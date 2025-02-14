@@ -221,7 +221,7 @@ export const Calculator = () => {
               onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Välj taklutning" />
+                <SelectValue placeholder="Välj typ av tak" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="15">Platt eller flackt tak</SelectItem>
@@ -269,7 +269,7 @@ export const Calculator = () => {
                 <p>Beräkningen baseras på:</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Modern solpanelsteknik (230W/m²)</li>
-                  <li>Din takvinkel ({data.roofAngle}°)</li>
+                  <li>Din ungefärliga takvinkel ({data.roofAngle}°)</li>
                   <li>Takets riktning ({data.roofDirection === "south" ? "söder" : 
                                       data.roofDirection === "north" ? "norr" : 
                                       data.roofDirection === "east" ? "öster" : "väster"})</li>
@@ -293,7 +293,7 @@ export const Calculator = () => {
               <div className="text-[#26292a]/70 space-y-2 text-left">
                 <p className="text-sm">
                   Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
-                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara helt missvisande. 
+                  Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara missvisande. 
                   Ta alltid in flera offerter och jämför verkliga priser.
                 </p>
               </div>
@@ -324,7 +324,7 @@ export const Calculator = () => {
                 Föregående
               </Button>
               <Button onClick={handleNext} className="px-6 bg-solar-primary text-white">
-                {step === 5 ? "Beräkna" : "Nästa"}
+                {step === 5 ? "Beräkna besparing" : "Nästa"}
               </Button>
             </>
           )}
