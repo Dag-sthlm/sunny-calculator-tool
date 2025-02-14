@@ -16,17 +16,17 @@ export const ProgressIndicator = ({
   return (
     <div className="w-full mb-8">
       <div className="flex justify-between mb-2">
-        <span className="text-sm text-solar-text/70">
+        <span className="text-sm text-[#26292a]">
           Steg {currentStep} av {totalSteps}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-solar-text/70">
+          <span className="text-sm text-[#26292a]">
             {Math.round((currentStep / totalSteps) * 100)}% färdigt
           </span>
           {currentStep === totalSteps && (
             <Button
               variant="link"
-              className="text-sm text-solar-text/70 p-0 h-auto"
+              className="text-sm text-[#26292a] p-0 h-auto"
               onClick={onReset}
             >
               Börja om

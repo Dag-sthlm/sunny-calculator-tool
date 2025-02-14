@@ -137,19 +137,19 @@ export const Calculator = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="text-center">
-                <p className="text-lg text-solar-text/70 mb-1">Årlig besparing</p>
-                <p className="text-3xl font-bold text-solar-primary">
+                <p className="text-lg text-[#26292a]/70 mb-1">Årlig besparing</p>
+                <p className="text-3xl font-bold text-[#26292a]">
                   {Math.round(yearlySavings).toLocaleString()} kr/år
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-lg text-solar-text/70 mb-1">Återbetalningstid</p>
-                <p className="text-3xl font-bold text-solar-primary">
+                <p className="text-lg text-[#26292a]/70 mb-1">Återbetalningstid</p>
+                <p className="text-3xl font-bold text-[#26292a]">
                   {Math.round(paybackYears * 10) / 10} år
                 </p>
               </div>
             </div>
-            <div className="text-solar-text/70 space-y-2 text-sm">
+            <div className="text-[#26292a]/70 space-y-2 text-sm">
               <p>Beräkningen baseras på:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Din uppskattade årsproduktion: {Math.round(data.estimatedProduction * 1000)} kWh</li>
@@ -161,7 +161,7 @@ export const Calculator = () => {
                 på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el.
               </p>
               <div className="mt-8 text-center">
-                <p className="text-base mb-4">
+                <p className="text-base mb-4 text-[#26292a]">
                   Vill du ha kostnadsfria offerter från upp till tre solcellsinstallatörer nära dig?
                 </p>
                 <Button 
@@ -202,7 +202,7 @@ export const Calculator = () => {
                 />
                 <span className="text-lg">m²</span>
               </div>
-              <p className="text-sm text-solar-text/70">
+              <p className="text-sm text-[#26292a]/70">
                 Osäker på ytan? Du kan ange en ungefärlig uppskattning. Ta exempelvis husets yta och dela med två 
                 om du har sadeltak och vill ha solpaneler i ett väderstreck.
               </p>
@@ -262,10 +262,10 @@ export const Calculator = () => {
             description="Baserat på dina svar kan din anläggning producera:"
           >
             <div className="text-center space-y-4">
-              <p className="text-3xl font-bold text-solar-primary mb-2">
+              <p className="text-3xl font-bold text-[#26292a] mb-2">
                 {Math.round(data.estimatedProduction)} kW
               </p>
-              <div className="text-solar-text/70 space-y-2 text-left">
+              <div className="text-[#26292a]/70 space-y-2 text-left">
                 <p>Beräkningen baseras på:</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Modern solpanelsteknik (230W/m²)</li>
@@ -287,10 +287,10 @@ export const Calculator = () => {
             description="Baserat på dina svar kan en solcellsinstallation kosta cirka:"
           >
             <div className="text-center space-y-4">
-              <p className="text-3xl font-bold text-solar-primary mb-2">
+              <p className="text-3xl font-bold text-[#26292a] mb-2">
                 {Math.round(data.estimatedProduction * 15000).toLocaleString()} kr
               </p>
-              <div className="text-solar-text/70 space-y-2 text-left">
+              <div className="text-[#26292a]/70 space-y-2 text-left">
                 <p className="text-sm">
                   Beräkningen baseras på en ungefärlig uppskattning av installationskostnader inklusive skatteavdrag. 
                   Beroende på ett flertal faktorer, exempelvis hur stor installationen är, kan siffrorna vara helt missvisande. 
@@ -319,11 +319,11 @@ export const Calculator = () => {
                 variant="outline"
                 onClick={handlePrevious}
                 disabled={step === 1}
-                className="px-6"
+                className="px-6 text-[#26292a]"
               >
                 Föregående
               </Button>
-              <Button onClick={handleNext} className="px-6 bg-solar-primary">
+              <Button onClick={handleNext} className="px-6 bg-solar-primary text-white">
                 {step === 5 ? "Beräkna" : "Nästa"}
               </Button>
             </>

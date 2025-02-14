@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -25,9 +26,9 @@ export const QuestionCard = ({
         className
       )}
     >
-      <h2 className="text-2xl font-semibold text-solar-text mb-2">{question}</h2>
+      <h2 className="text-2xl font-semibold text-[#26292a] mb-2">{question}</h2>
       {description && (
-        <p className="text-solar-text/70 mb-6">{description}</p>
+        <p className="text-[#26292a]/70 mb-6">{description}</p>
       )}
       {children}
     </motion.div>
