@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -14,6 +13,8 @@ interface CalculatorData {
   roofAngle: number;
   roofDirection: string;
   estimatedProduction: number;
+  numberOfPanels: number;
+  actualSolarPanelArea: number;
 }
 
 const initialData: CalculatorData = {
@@ -21,7 +22,13 @@ const initialData: CalculatorData = {
   roofAngle: 0,
   roofDirection: "",
   estimatedProduction: 0,
+  numberOfPanels: 0,
+  actualSolarPanelArea: 0,
 };
+
+const PANEL_WIDTH = 1.03;  // meter
+const PANEL_HEIGHT = 1.75; // meter
+const PANEL_AREA = PANEL_WIDTH * PANEL_HEIGHT;
 
 export const Calculator = () => {
   const [step, setStep] = useState(1);
@@ -29,7 +36,7 @@ export const Calculator = () => {
   const [showResults, setShowResults] = useState(false);
   const { toast } = useToast();
 
-  const handleReset = () => {
+    const handleReset = () => {
     setStep(1);
     setData(initialData);
     setShowResults(false);
@@ -38,8 +45,17 @@ export const Calculator = () => {
   const handleNext = () => {
     if (validateCurrentStep()) {
       if (step === 3) {
-        const estimatedProduction = calculateEstimatedProduction(data);
-        setData(prev => ({ ...prev, estimatedProduction }));
+        const { numberOfPanels, actualSolarPanelArea } = calculateNumberOfPanels(data.roofSize);
+        const estimatedProduction = calculateEstimatedProduction({ 
+          ...data, 
+          actualSolarPanelArea 
+        });
+        setData(prev => ({ 
+          ...prev, 
+          estimatedProduction,
+          numberOfPanels,
+          actualSolarPanelArea
+        }));
       }
       if (step === 5) {
         setShowResults(true);
@@ -53,13 +69,13 @@ export const Calculator = () => {
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const calculateEstimatedProduction = (data: CalculatorData) => {
-    const baseProduction = data.roofSize * 0.23;
+  const calculateEstimatedProduction = (calculationData: CalculatorData) => {
+    const baseProduction = calculationData.actualSolarPanelArea * 0.23;
     const optimalAngle = 42;
-    const angleEfficiency = Math.cos((Math.abs(data.roofAngle - optimalAngle) * Math.PI) / 180);
+    const angleEfficiency = Math.cos((Math.abs(calculationData.roofAngle - optimalAngle) * Math.PI) / 180);
     
     let directionMultiplier = 1;
-    switch (data.roofDirection) {
+    switch (calculationData.roofDirection) {
       case "south":
         directionMultiplier = 1;
         break;
@@ -126,6 +142,13 @@ export const Calculator = () => {
         break;
     }
     return true;
+  };
+
+  const calculateNumberOfPanels = (roofSize: number) => {
+    // Räkna ut hur många paneler som får plats på taket
+    const numberOfPanels = Math.floor(roofSize / PANEL_AREA);
+    const actualSolarPanelArea = numberOfPanels * PANEL_AREA;
+    return { numberOfPanels, actualSolarPanelArea };
   };
 
   const renderQuestion = () => {
@@ -278,7 +301,8 @@ export const Calculator = () => {
                   <li>Takets riktning ({data.roofDirection === "south" ? "söder" : 
                                       data.roofDirection === "north" ? "norr" : 
                                       data.roofDirection === "east" ? "öster" : "väster"})</li>
-                  <li>Ungefärligt antal kvadratmeter solceller ({data.roofSize} m²)</li>
+                  <li>Antal solpaneler som får plats: {data.numberOfPanels} st (standardstorlek {PANEL_WIDTH}x{PANEL_HEIGHT}m)</li>
+                  <li>Total yta solceller: {Math.round(data.actualSolarPanelArea * 100) / 100} m² (uppgiven takyta: {data.roofSize} m²)</li>
                 </ul>
               </div>
             </div>
