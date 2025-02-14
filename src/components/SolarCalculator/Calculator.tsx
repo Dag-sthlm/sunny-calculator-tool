@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 
 interface CalculatorData {
   roofSize: number;
@@ -220,7 +221,7 @@ export const Calculator = () => {
               value={data.roofAngle.toString()}
               onValueChange={(value) => setData({ ...data, roofAngle: Number(value) })}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Välj typ av tak" />
               </SelectTrigger>
               <SelectContent>
@@ -315,17 +316,21 @@ export const Calculator = () => {
         <div className="flex justify-between mt-8">
           {!showResults && (
             <>
-              <Button
-                variant="outline"
-                onClick={handlePrevious}
-                disabled={step === 1}
-                className="px-6 text-[#443dc1] border-[#443dc1] hover:bg-[#443dc1]/10"
-              >
-                Föregående
-              </Button>
+              {step > 1 && (
+                <Button
+                  variant="outline"
+                  onClick={handlePrevious}
+                  className="px-6 text-[#443dc1] border-[#443dc1] hover:bg-[#443dc1]/10"
+                >
+                  Föregående
+                </Button>
+              )}
               <Button 
                 onClick={handleNext} 
-                className="px-6 bg-[#443dc1] hover:bg-[#443dc1]/90 text-white"
+                className={cn(
+                  "px-6 bg-[#443dc1] hover:bg-[#443dc1]/90 text-white",
+                  step === 1 ? "ml-auto" : "" // Om det är steg 1, placera knappen till höger
+                )}
               >
                 {step === 5 ? "Beräkna besparing" : "Nästa"}
               </Button>
