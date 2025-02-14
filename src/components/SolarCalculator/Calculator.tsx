@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -98,7 +99,7 @@ export const Calculator = () => {
     const yearlyProduction = data.estimatedProduction * 1000;
     const estimatedPricePerKwh = 2;
     const yearlySavings = yearlyProduction * estimatedPricePerKwh;
-    const installationCost = Math.round(data.estimatedProduction * 15000);
+    const installationCost = Math.round(data.actualSolarPanelArea * 2500);
     const paybackYears = installationCost / yearlySavings;
     
     return {
@@ -317,7 +318,7 @@ export const Calculator = () => {
           >
             <div className="text-center space-y-4">
               <p className="text-3xl font-bold text-[#26292a] mb-2">
-                {Math.round(data.estimatedProduction * 15000).toLocaleString()} kr
+                {Math.round(data.actualSolarPanelArea * 2500).toLocaleString()} kr
               </p>
               <div className="text-[#26292a]/70 space-y-2 text-left">
                 <p className="text-sm">
