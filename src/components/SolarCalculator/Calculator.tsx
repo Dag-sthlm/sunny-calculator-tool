@@ -60,14 +60,6 @@ export const Calculator = () => {
         }));
       }
       if (step === 5) {
-        if (!data.yearlyConsumption) {
-          toast({
-            title: "Ange din årliga elförbrukning",
-            description: "Detta behövs för att beräkna din besparing",
-            variant: "destructive",
-          });
-          return;
-        }
         setShowResults(true);
       } else {
         setStep((prev) => Math.min(prev + 1, 5));
@@ -108,12 +100,12 @@ export const Calculator = () => {
     const yearlyProduction = data.estimatedProduction * 1000;
     const estimatedPricePerKwh = 2;
     
-    // Calculate how much of the production can be used directly
-    const directUsePercentage = Math.min(data.yearlyConsumption / yearlyProduction, 1) * 0.7;
-    const excessProduction = Math.max(0, yearlyProduction - (data.yearlyConsumption * 0.7));
+    // Assume 70% self-consumption rate
+    const selfConsumptionRate = 0.7;
     
     // Direct use is valued at full price, excess at 70% of price (selling to grid)
-    const directUseSavings = directUsePercentage * yearlyProduction * estimatedPricePerKwh;
+    const directUseSavings = selfConsumptionRate * yearlyProduction * estimatedPricePerKwh;
+    const excessProduction = yearlyProduction * (1 - selfConsumptionRate);
     const excessSaleValue = excessProduction * (estimatedPricePerKwh * 0.7);
     
     const yearlySavings = directUseSavings + excessSaleValue;
@@ -126,7 +118,7 @@ export const Calculator = () => {
       paybackYears,
       installationCost,
       yearlyProduction,
-      selfConsumptionRate: directUsePercentage * 100
+      selfConsumptionRate: selfConsumptionRate * 100
     };
   };
 
@@ -200,14 +192,13 @@ export const Calculator = () => {
               <p>Beräkningen baseras på:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Din uppskattade årsproduktion: {Math.round(yearlyProduction)} kWh</li>
-                <li>Din årliga elförbrukning: {data.yearlyConsumption.toLocaleString()} kWh</li>
-                <li>Uppskattad egenanvändning: {Math.round(selfConsumptionRate)}%</li>
+                <li>Antagen egenanvändning: {Math.round(selfConsumptionRate)}%</li>
                 <li>Genomsnittligt elpris: 2 kr/kWh</li>
                 <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
               </ul>
               <p className="mt-4">
                 Observera att detta är en förenklad beräkning. Faktiska besparingar kan variera beroende 
-                på elprisets utveckling, din elförbrukning och när på dygnet du använder mest el.
+                på elprisets utveckling och när på dygnet du använder mest el.
               </p>
               <div className="mt-8 text-center">
                 <p className="text-base mb-4 text-[#26292a]">
@@ -341,27 +332,10 @@ export const Calculator = () => {
               </div>
               
               <div className="space-y-2">
-                <p className="text-lg font-medium text-[#26292a]">Uppskattad elförbrukning</p>
-                <p className="text-sm text-[#26292a]/70">Ange din ungefärliga elförbrukning per år:</p>
-                
-                <Select
-                  value={data.yearlyConsumption ? data.yearlyConsumption.toString() : ""}
-                  onValueChange={(value) => setData({ ...data, yearlyConsumption: Number(value) })}
-                >
-                  <SelectTrigger className="w-full text-left">
-                    <SelectValue placeholder="Årlig elförbrukning i kWh" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="5000">5000 kWh</SelectItem>
-                    <SelectItem value="10000">10000 kWh</SelectItem>
-                    <SelectItem value="15000">15000 kWh</SelectItem>
-                    <SelectItem value="20000">20000 kWh</SelectItem>
-                    <SelectItem value="25000">25000 kWh</SelectItem>
-                    <SelectItem value="30000">30000 kWh</SelectItem>
-                    <SelectItem value="35000">35000 kWh</SelectItem>
-                    <SelectItem value="40000">40000 kWh</SelectItem>
-                  </SelectContent>
-                </Select>
+                <p className="text-base font-medium text-[#26292a]">
+                  Klicka på "Beräkna besparing" nedan för att se potentiell återbetalningstid baserat 
+                  på en antagen egenanvändning på 70% av producerad el.
+                </p>
               </div>
             </div>
           </QuestionCard>
