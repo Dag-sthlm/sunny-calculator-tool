@@ -254,7 +254,7 @@ export const Calculator = () => {
         return (
           <QuestionCard
             question="I vilken riktning ligger taket?"
-            description="Välj det väderstreck som taket huvudsakligen är riktat emot."
+            description="Välj det väderstreck som solpanelerna huvudsakligen kommer att vara riktade emot."
           >
             <Select
               value={data.roofDirection}
