@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -15,6 +16,7 @@ interface CalculatorData {
   estimatedProduction: number;
   numberOfPanels: number;
   actualSolarPanelArea: number;
+  yearlyConsumption: number;
 }
 
 const initialData: CalculatorData = {
@@ -24,6 +26,7 @@ const initialData: CalculatorData = {
   estimatedProduction: 0,
   numberOfPanels: 0,
   actualSolarPanelArea: 0,
+  yearlyConsumption: 0,
 };
 
 const PANEL_WIDTH = 1.03;  // meter
@@ -58,6 +61,14 @@ export const Calculator = () => {
         }));
       }
       if (step === 5) {
+        if (!data.yearlyConsumption) {
+          toast({
+            title: "Ange din årliga elförbrukning",
+            description: "Detta behövs för att beräkna din besparing",
+            variant: "destructive",
+          });
+          return;
+        }
         setShowResults(true);
       } else {
         setStep((prev) => Math.min(prev + 1, 5));
@@ -97,7 +108,16 @@ export const Calculator = () => {
   const calculateSavings = () => {
     const yearlyProduction = data.estimatedProduction * 1000;
     const estimatedPricePerKwh = 2;
-    const yearlySavings = yearlyProduction * estimatedPricePerKwh;
+    
+    // Calculate how much of the production can be used directly
+    const directUsePercentage = Math.min(data.yearlyConsumption / yearlyProduction, 1) * 0.7;
+    const excessProduction = Math.max(0, yearlyProduction - (data.yearlyConsumption * 0.7));
+    
+    // Direct use is valued at full price, excess at 70% of price (selling to grid)
+    const directUseSavings = directUsePercentage * yearlyProduction * estimatedPricePerKwh;
+    const excessSaleValue = excessProduction * (estimatedPricePerKwh * 0.7);
+    
+    const yearlySavings = directUseSavings + excessSaleValue;
     const baseCost = 30000;
     const installationCost = Math.round(data.actualSolarPanelArea * 2500) + baseCost;
     const paybackYears = installationCost / yearlySavings;
@@ -105,7 +125,9 @@ export const Calculator = () => {
     return {
       yearlySavings,
       paybackYears,
-      installationCost
+      installationCost,
+      yearlyProduction,
+      selfConsumptionRate: directUsePercentage * 100
     };
   };
 
@@ -154,7 +176,7 @@ export const Calculator = () => {
 
   const renderQuestion = () => {
     if (showResults) {
-      const { yearlySavings, paybackYears, installationCost } = calculateSavings();
+      const { yearlySavings, paybackYears, installationCost, yearlyProduction, selfConsumptionRate } = calculateSavings();
       return (
         <QuestionCard
           question="Din potentiella besparing"
@@ -178,7 +200,9 @@ export const Calculator = () => {
             <div className="text-[#26292a]/70 space-y-2 text-sm">
               <p>Beräkningen baseras på:</p>
               <ul className="list-disc list-inside space-y-1">
-                <li>Din uppskattade årsproduktion: {Math.round(data.estimatedProduction * 1000)} kWh</li>
+                <li>Din uppskattade årsproduktion: {Math.round(yearlyProduction)} kWh</li>
+                <li>Din årliga elförbrukning: {data.yearlyConsumption.toLocaleString()} kWh</li>
+                <li>Uppskattad egenanvändning: {Math.round(selfConsumptionRate)}%</li>
                 <li>Genomsnittligt elpris: 2 kr/kWh</li>
                 <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
               </ul>
@@ -305,15 +329,40 @@ export const Calculator = () => {
             question="Uppskattad installationskostnad"
             description="Baserat på dina svar kan en solcellsinstallation kosta cirka:"
           >
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-6">
               <p className="text-3xl font-bold text-[#26292a] mb-2">
                 {(Math.round(data.actualSolarPanelArea * 2500) + 30000).toLocaleString()} kr
               </p>
-              <div className="text-[#26292a]/70 space-y-2 text-left">
+              
+              <div className="text-[#26292a]/70 space-y-2 text-left mb-6">
                 <p className="text-sm">
                   Beroende på ett flertal faktorer kan siffrorna vara missvisande. 
                   Ta alltid in flera offerter och jämför verkliga priser.
                 </p>
+              </div>
+              
+              <div className="space-y-2">
+                <p className="text-lg font-medium text-[#26292a]">Uppskattad elförbrukning</p>
+                <p className="text-sm text-[#26292a]/70">Ange din ungefärliga elförbrukning per år:</p>
+                
+                <Select
+                  value={data.yearlyConsumption ? data.yearlyConsumption.toString() : ""}
+                  onValueChange={(value) => setData({ ...data, yearlyConsumption: Number(value) })}
+                >
+                  <SelectTrigger className="w-full text-left">
+                    <SelectValue placeholder="Årlig elförbrukning i kWh" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5000">5000 kWh</SelectItem>
+                    <SelectItem value="10000">10000 kWh</SelectItem>
+                    <SelectItem value="15000">15000 kWh</SelectItem>
+                    <SelectItem value="20000">20000 kWh</SelectItem>
+                    <SelectItem value="25000">25000 kWh</SelectItem>
+                    <SelectItem value="30000">30000 kWh</SelectItem>
+                    <SelectItem value="35000">35000 kWh</SelectItem>
+                    <SelectItem value="40000">40000 kWh</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </QuestionCard>
