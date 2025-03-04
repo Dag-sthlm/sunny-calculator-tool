@@ -188,7 +188,7 @@ export const Calculator = () => {
               </p>
               <div className="mt-8 text-center">
                 <p className="text-base mb-4 text-[#26292a]">
-                  Fyll i formuläret för att få kostnadsfria offerter från solcellsinstallatörer nära dig.
+                  Fyll i formuläret på den här sidan för att få kostnadsfria offerter på solceller!
                 </p>
               </div>
             </div>
