@@ -188,19 +188,8 @@ export const Calculator = () => {
               </p>
               <div className="mt-8 text-center">
                 <p className="text-base mb-4 text-[#26292a]">
-                  Vill du ha kostnadsfria offerter från upp till tre solcellsinstallatörer nära dig?
+                  Fyll i formuläret för att få kostnadsfria offerter från solcellsinstallatörer nära dig.
                 </p>
-                <Button 
-                  className="bg-solar-primary hover:bg-solar-primary/90 text-white px-8 py-3 text-base"
-                  onClick={() => {
-                    const element = document.querySelector('.leazard--scroll') as HTMLElement;
-                    if (element) {
-                      element.click();
-                    }
-                  }}
-                >
-                  Få erbjudanden nu
-                </Button>
               </div>
             </div>
           </div>
