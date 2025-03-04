@@ -322,7 +322,7 @@ export const Calculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-white p-3">
       <div className="max-w-4xl mx-auto">
         <ProgressIndicator 
           currentStep={showResults ? 5 : step} 
