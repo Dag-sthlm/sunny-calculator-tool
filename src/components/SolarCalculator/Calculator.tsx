@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -380,27 +379,25 @@ export const Calculator = () => {
         />
         <AnimatePresence mode="wait">{renderQuestion()}</AnimatePresence>
         <div className="flex justify-between mt-8">
+          {(step > 1 || showResults) && (
+            <Button
+              variant="outline"
+              onClick={showResults ? () => setShowResults(false) : handlePrevious}
+              className="px-6 text-[#443dc1] border-[#443dc1] hover:bg-[#443dc1]/10"
+            >
+              Föregående
+            </Button>
+          )}
           {!showResults && (
-            <>
-              {step > 1 && (
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  className="px-6 text-[#443dc1] border-[#443dc1] hover:bg-[#443dc1]/10"
-                >
-                  Föregående
-                </Button>
+            <Button 
+              onClick={handleNext} 
+              className={cn(
+                "px-6 bg-[#443dc1] hover:bg-[#443dc1]/90 text-white",
+                step === 1 ? "ml-auto" : ""
               )}
-              <Button 
-                onClick={handleNext} 
-                className={cn(
-                  "px-6 bg-[#443dc1] hover:bg-[#443dc1]/90 text-white",
-                  step === 1 ? "ml-auto" : ""
-                )}
-              >
-                {step === 5 ? "Beräkna besparing" : "Nästa"}
-              </Button>
-            </>
+            >
+              {step === 5 ? "Beräkna besparing" : "Nästa"}
+            </Button>
           )}
         </div>
       </div>
