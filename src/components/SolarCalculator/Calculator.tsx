@@ -100,8 +100,8 @@ export const Calculator = () => {
     const yearlyProduction = data.estimatedProduction * 1000;
     const estimatedPricePerKwh = 2;
     
-    // Assume 60% self-consumption rate
-    const selfConsumptionRate = 0.6;
+    // Assume 50% self-consumption rate
+    const selfConsumptionRate = 0.5;
     
     // Direct use is valued at full price, excess at 70% of price (selling to grid)
     const directUseSavings = selfConsumptionRate * yearlyProduction * estimatedPricePerKwh;
