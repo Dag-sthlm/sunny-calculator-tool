@@ -15,7 +15,6 @@ interface CalculatorData {
   estimatedProduction: number;
   numberOfPanels: number;
   actualSolarPanelArea: number;
-  yearlyConsumption: number;
 }
 
 const initialData: CalculatorData = {
@@ -25,12 +24,12 @@ const initialData: CalculatorData = {
   estimatedProduction: 0,
   numberOfPanels: 0,
   actualSolarPanelArea: 0,
-  yearlyConsumption: 0,
 };
 
 const PANEL_WIDTH = 1.03;  // meter
 const PANEL_HEIGHT = 1.75; // meter
 const PANEL_AREA = PANEL_WIDTH * PANEL_HEIGHT;
+const ELECTRICITY_PRICE = 1.5; // kr/kWh
 
 export const Calculator = () => {
   const [step, setStep] = useState(1);
@@ -97,18 +96,11 @@ export const Calculator = () => {
   };
 
   const calculateSavings = () => {
-    const yearlyProduction = data.estimatedProduction * 1000;
-    const estimatedPricePerKwh = 2;
+    const yearlyProduction = data.estimatedProduction * 1000; // Convert to kWh
     
-    // Assume 50% self-consumption rate
-    const selfConsumptionRate = 0.5;
+    // Simple calculation without self-consumption rate
+    const yearlySavings = yearlyProduction * ELECTRICITY_PRICE;
     
-    // Direct use is valued at full price, excess at 70% of price (selling to grid)
-    const directUseSavings = selfConsumptionRate * yearlyProduction * estimatedPricePerKwh;
-    const excessProduction = yearlyProduction * (1 - selfConsumptionRate);
-    const excessSaleValue = excessProduction * (estimatedPricePerKwh * 0.7);
-    
-    const yearlySavings = directUseSavings + excessSaleValue;
     const baseCost = 30000;
     const installationCost = Math.round(data.actualSolarPanelArea * 2500) + baseCost;
     const paybackYears = installationCost / yearlySavings;
@@ -117,8 +109,7 @@ export const Calculator = () => {
       yearlySavings,
       paybackYears,
       installationCost,
-      yearlyProduction,
-      selfConsumptionRate: selfConsumptionRate * 100
+      yearlyProduction
     };
   };
 
@@ -167,7 +158,7 @@ export const Calculator = () => {
 
   const renderQuestion = () => {
     if (showResults) {
-      const { yearlySavings, paybackYears, installationCost, yearlyProduction, selfConsumptionRate } = calculateSavings();
+      const { yearlySavings, paybackYears, installationCost, yearlyProduction } = calculateSavings();
       return (
         <QuestionCard
           question="Din potentiella besparing"
@@ -192,8 +183,7 @@ export const Calculator = () => {
               <p>Beräkningen baseras på:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Din uppskattade årsproduktion: {Math.round(yearlyProduction)} kWh</li>
-                <li>Antagen egenanvändning: {Math.round(selfConsumptionRate)}%</li>
-                <li>Genomsnittligt elpris: 2 kr/kWh</li>
+                <li>Genomsnittligt elhandelspris: {ELECTRICITY_PRICE} kr/kWh</li>
                 <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
               </ul>
               <p className="mt-4">
