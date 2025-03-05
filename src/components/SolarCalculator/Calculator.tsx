@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -98,8 +99,8 @@ export const Calculator = () => {
   const calculateSavings = () => {
     const yearlyProduction = data.estimatedProduction * 1000; // Convert to kWh
     
-    // Simple calculation without self-consumption rate
-    const yearlySavings = yearlyProduction * ELECTRICITY_PRICE;
+    // Apply the 0.75 factor to make the savings more realistic
+    const yearlySavings = yearlyProduction * ELECTRICITY_PRICE * 0.75;
     
     const baseCost = 30000;
     const installationCost = Math.round(data.actualSolarPanelArea * 2500) + baseCost;
@@ -180,7 +181,7 @@ export const Calculator = () => {
               </div>
             </div>
             <div className="text-[#26292a]/70 space-y-2 text-sm">
-              <p>Beräkningen baseras på:</p>
+              <p>Beräkningen baseras på schablonantaganden kring elförbrukning och egenanvändning samt:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>Din uppskattade årsproduktion: {Math.round(yearlyProduction)} kWh</li>
                 <li>Genomsnittligt elhandelspris: {ELECTRICITY_PRICE} kr/kWh</li>
