@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -188,8 +187,7 @@ export const Calculator = () => {
                 <li>Installationskostnad: {installationCost.toLocaleString()} kr</li>
               </ul>
               <p className="mt-4">
-                Observera att detta är en förenklad beräkning. Faktiska besparingar kan variera beroende 
-                på elprisets utveckling och när på dygnet du använder mest el.
+                Observera att detta är en förenklad beräkning. Genom att ta in offerter kan du få mer exakta siffror för din installation.
               </p>
               <div className="mt-8 text-center">
                 <p className="text-base mb-4 text-[#26292a]">
