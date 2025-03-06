@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProgressIndicator } from "./ProgressIndicator";
@@ -98,8 +99,8 @@ export const Calculator = () => {
   const calculateSavings = () => {
     const yearlyProduction = data.estimatedProduction * 1000; // Convert to kWh
     
-    // Apply the 0.75 factor to make the savings more realistic
-    const yearlySavings = yearlyProduction * ELECTRICITY_PRICE * 0.75;
+    // Apply the 0.8 factor to make the savings more realistic (changed from 0.75)
+    const yearlySavings = yearlyProduction * ELECTRICITY_PRICE * 0.8;
     
     const baseCost = 30000;
     const installationCost = Math.round(data.actualSolarPanelArea * 2500) + baseCost;
